@@ -3,9 +3,12 @@
 SQL FILE
 create database phonebook;
 use phonebook;
-create table contacts(id int AUTO_INCREMENT PRIMARY KEY,name varchar(100) not null,dob varchar(100));
-create table phone(id int, pnumber varchar(10) not null, foreign key(id) references contacts(id) on update cascade on delete cascade );
-create table emails(id int, email varchar(100) not null, foreign key(id) references contacts(id) on update cascade on delete cascade );
+create table contacts(id varchar(200) PRIMARY KEY,name varchar(100) not null,dob varchar(100));
+
+create table phone(id varchar(200), pnumber varchar(10) not null unique, foreign key(id) references contacts(id) on update cascade on delete cascade );
+
+create table emails(id varchar(200), email varchar(100) not null, foreign key(id) references contacts(id) on update cascade on delete cascade );
+
 alter table phone add unique(pnumber);
 
 

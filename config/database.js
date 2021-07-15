@@ -2,8 +2,9 @@ var mysql = require('mysql');
 var connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
-  password : 'mohit',
-  database : 'phonebook'
+  password : 'Mohit@12345',
+  database : 'phonebook',
+  insecureAuth : true
 });
  
 connection.connect();
@@ -11,7 +12,7 @@ connection.connect();
 module.exports={
     query:async(query,data)=>{
         return new Promise((resolve,reject)=>{
-            connection.query(query,data,(result,error)=>{
+            connection.query(query,data,(error,result)=>{
                 if(error) reject(error);
                 resolve(result);
             });

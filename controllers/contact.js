@@ -1,23 +1,25 @@
 const database=require("../config/database");
 const getEmails=require("../lib/getEmails");
 const getPhoneNos=require("../lib/getPhoneNos");
+const uuidv4=require("uuid").v4;
 
 module.exports ={
 
 
     addContact:async(req,res)=>{
-
+        console.log(req.body);
       try{
           if(req.body.name==null || req.body.phone==null || req.body.email==null) 
             throw new Error("One or More fields Empty");
-          let result=await database.query("INSERT INTO contacts(name, dob) VALUES(?,?)",[req.body.name,req.body.dob]);
-          let phonenos=await getPhoneNos(result.id,req.body.phone);
-          let emails=await getEmails(result.id,req.body.email);
-          await database.query("INSERT INTO phone(id,pnumber) VALUES ?",phonenos);
-          await database.query("INSERT INTO emails(id,email) VALUES ?",emails);
-          res.json({status:true});
+          let id=uuidv4();  
+          let result=await database.query("INSERT INTO contacts(id,name, dob) VALUES(?,?,?)",[id,req.body.name,req.body.dob]);
+          let phonenos=await getPhoneNos(id,req.body.phone);
+          let emails=await getEmails(id,req.body.email);
+          await database.query("INSERT INTO phone(id,pnumber) VALUES ?",[phonenos]);
+          await database.query("INSERT INTO emails(id,email) VALUES ?",[emails]);
+          res.json({status:true,id:id});
       }catch(err){
-          res.json({status:false, error:err.message});
+          res.json({status:false, error:err});
       }
 
 
@@ -38,7 +40,7 @@ module.exports ={
             let id=req.params.id;
             let emails=await getEmails(id,req.body.email);
             await database.query("DELETE FROM emails WHERE id=?",[id]);
-            await database.query("INSERT INTO emails(id,email) VALUES ?",emails);
+            await database.query("INSERT INTO emails(id,email) VALUES ?",[emails]);
             res.json({status:true});
         }catch(err){
             res.json({status:false, error:err.message});
@@ -50,7 +52,7 @@ module.exports ={
             let id=req.params.id;
             let nos=await getPhoneNos(id,req.body.phone);
             await database.query("DELETE FROM phone WHERE id=?",[id]);
-            await database.query("INSERT INTO emails(id,email) VALUES ?",emails);
+            await database.query("INSERT INTO phone(id,pnumber) VALUES ?",[nos]);
             res.json({status:true});
         }catch(err){
             res.json({status:false, error:err.message});
@@ -60,7 +62,7 @@ module.exports ={
     updateUser:async(req,res)=>{
         try{
             let id=req.params.id;
-            await database.query("UPDATE TABLE contacts SET name=? dob=? WHERE id=?",[req.body.name,req.body.dob,id]);
+            await database.query("UPDATE contacts SET name=?,dob=? WHERE id=?",[req.body.name,req.body.dob,id]);
             res.json({status:true});
         }catch(err){
             res.json({status:false, error:err.message});
@@ -104,8 +106,24 @@ module.exports ={
             let query=`select c.id,c.name,c.dob,
              (select GROUP_CONCAT(DISTINCT pnumber separator';') from phone p where c.id=p.id group by id) as nos,
              (select GROUP_CONCAT(DISTINCT email separator';')
-             from emails e where c.id=e.id group by id) as emails from contacts c where c.name like %?% order by c.name`;
-            let result=await database.query(query,[name]);
+             from emails e where c.id=e.id group by id) as emails from contacts c where c.name like ? order by c.name`;
+            let result=await database.query(query,['%'+name+'%']);
+            res.json({status:true, data:result});
+        }catch(err){
+            res.json({status:false, error:err.message});
+        }
+    },
+
+
+    getAllContacts:async(req,res)=>{
+        try{
+            let name=req.params.name;
+            let query=`select c.id,c.name,c.dob,
+            (select GROUP_CONCAT(DISTINCT pnumber separator';') from phone p where c.id=p.id group by id) as nos,
+            (select GROUP_CONCAT(DISTINCT email separator';') from emails e
+            where c.id=e.id group by id) as emails from contacts c;
+            `;
+            let result=await database.query(query);
             res.json({status:true, data:result});
         }catch(err){
             res.json({status:false, error:err.message});
