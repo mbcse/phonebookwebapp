@@ -1,5 +1,40 @@
 # PhoneBookWebAppBackend
 Add, update, search contacts
+### In this project operations user can do :-
+
+Add a contact 
+
+Remove the contact 
+
+Update the contact 
+
+#### Search contact 
+
+ -> By name (partial name can also be searched)
+
+->  By phone number
+
+->  By email 
+
+->  Search results should be sorted alphabetically (by name).
+
+
+### Contact :-
+
+-> Will have a Name (required) - 
+
+-> Will/Can have multiple phone numbers (should have at least 1 phone number) 
+
+-> Will/Can have multiple emails 
+
+-> Will/Can have single Date of birth (not mandatory)
+
+
+### Constraints :
+
+-> Two contacts cannot have same phone numbers 
+
+-> Two contacts can have the same emails.
 
 # TechStack
 - NodeJs
@@ -23,6 +58,7 @@ Add, update, search contacts
 - create table emails(id varchar(200), email varchar(100) not null, foreign key(id) references contacts(id) on update cascade on delete cascade );
 
 - Command to search data
+
 select c.id,c.name,c.dob, (select GROUP_CONCAT(DISTINCT pnumber separator';') from phone p where c.id=p.id group by id) as nos, (select GROUP_CONCAT(DISTINCT email separator';') from emails e where c.id=e.id group by id) as emails from contacts c;
 
 # Documentation URL
