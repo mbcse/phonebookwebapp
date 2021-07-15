@@ -7,8 +7,11 @@ Add, update, search contacts
 
 # To run server
 - Clone and cd Repo
-- Create a copy of database locally and configure mysql by putting credentials in database.js file
+- Create a copy of database locally and configure mysql by putting credentials in config/database.js file
 - run command `npm start`
+
+# To import database using database.sql dump file
+mysql -u username -p database_name < database.sql
 
 # SQL commands to make database locally
 - create database phonebook;
