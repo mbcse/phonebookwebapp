@@ -7,7 +7,10 @@ var connection = mysql.createConnection({
   insecureAuth : true
 });
  
-connection.connect();
+connection.connect((err, connection) => {
+    if(err) console.log(err);
+    console.log("Mysql Database connected");
+});
 
 module.exports={
     query:async(query,data)=>{
