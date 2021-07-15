@@ -1,15 +1,23 @@
-# phonebookwebapp
+# PhoneBookWebAppBackend
+Add, update, search contacts
 
-SQL FILE
-create database phonebook;
-use phonebook;
-create table contacts(id varchar(200) PRIMARY KEY,name varchar(100) not null,dob varchar(100));
+# TechStack
+- NodeJs
+- Mysql
 
-create table phone(id varchar(200), pnumber varchar(10) not null unique, foreign key(id) references contacts(id) on update cascade on delete cascade );
+# To run server
+- Clone and cd Repo
+- Create a copy of database locally and configure mysql by putting credentials in database.js file
+- run command `npm start`
 
-create table emails(id varchar(200), email varchar(100) not null, foreign key(id) references contacts(id) on update cascade on delete cascade );
+# SQL commands to make database locally
+- create database phonebook;
+- use phonebook;
+- create table contacts(id varchar(200) PRIMARY KEY,name varchar(100) not null,dob varchar(100));
 
-alter table phone add unique(pnumber);
+- create table phone(id varchar(200), pnumber varchar(10) not null unique, foreign key(id) references contacts(id) on update cascade on delete cascade );
 
+- create table emails(id varchar(200), email varchar(100) not null, foreign key(id) references contacts(id) on update cascade on delete cascade );
 
+- Command to search data
 select c.id,c.name,c.dob, (select GROUP_CONCAT(DISTINCT pnumber separator';') from phone p where c.id=p.id group by id) as nos, (select GROUP_CONCAT(DISTINCT email separator';') from emails e where c.id=e.id group by id) as emails from contacts c;
