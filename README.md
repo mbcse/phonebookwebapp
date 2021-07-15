@@ -1,6 +1,6 @@
 # PhoneBookWebAppBackend
 Add, update, search contacts
-### In this project operations user can do :-
+#### In this project operations user can do :-
 
 Add a contact 
 
@@ -19,7 +19,7 @@ Update the contact
 ->  Search results should be sorted alphabetically (by name).
 
 
-### Contact :-
+#### Contact :-
 
 -> Will have a Name (required) - 
 
