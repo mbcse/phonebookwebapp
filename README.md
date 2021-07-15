@@ -30,7 +30,7 @@ Update the contact
 -> Will/Can have single Date of birth (not mandatory)
 
 
-### Constraints :
+#### Constraints :
 
 -> Two contacts cannot have same phone numbers 
 
