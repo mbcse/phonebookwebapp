@@ -11,7 +11,7 @@ Add, update, search contacts
 - run command `npm start`
 
 # To import database using database.sql dump file
-mysql -u username -p database_name < database.sql
+- run command `mysql -u username -p database_name < database.sql`
 
 # SQL commands to make database locally
 - create database phonebook;
